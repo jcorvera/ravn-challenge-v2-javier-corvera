@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    container_name: clothesdb
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    networks:
+      - clothes
+
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    env_file: .env
+    command: yarn run start:prod
+    restart: always
+    networks:
+      - clothes
+    ports:
+      - ${APP_PORT}:3000
+    depends_on:
+      - db
+
+networks:
+  clothes:
+    driver: 'bridge'
