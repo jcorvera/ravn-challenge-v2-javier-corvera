@@ -1,10 +1,13 @@
 {
   "name": "ravn-challenge-v2-javier-corvera",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Clothes Store",
+  "author": "Javier Corvera",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "prisma": {
+    "seed": "ts-node ./src/database/seeds/seed.ts"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -18,10 +21,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:migrate": "yarn prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
+    "prisma:create": "yarn prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
     "prisma:reset": "yarn prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
     "prisma:format": "yarn prisma format --schema=./src/database/schema.prisma",
-    "prisma:generate": "yarn prisma generate --schema=./src/database/schema.prisma"
+    "prisma:migrate": "yarn prisma db push --schema=./src/database/schema.prisma"
   },
   "dependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -40,6 +43,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/cron": "^2.0.1",

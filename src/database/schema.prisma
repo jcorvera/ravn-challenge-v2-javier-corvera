@@ -34,7 +34,6 @@ model User {
   updatedAt       DateTime @updatedAt @map(name: "updated_at")
   roles           UserRoles[]
   address         UserAddress?
-  payments        UserPayment[]
   likes           UserArticleLike[]
   orders          Order[]
   @@map(name:"users")
@@ -49,17 +48,6 @@ model UserAddress {
   userId      Int    @unique @map(name: "user_id")
 
   @@map(name: "user_address")
-}
-
-model UserPayment {
-  id          Int @id @default(autoincrement())
-  paymentType PaymentType @map(name: "payment_type")
-  provider    String
-  accountNo   String @map(name: "account_no")
-  user        User @relation(fields: [userId], references: [id])
-  userId      Int @map(name: "user_id")
-
-  @@map(name: "user_payments")
 }
 
 model UserRoles {
