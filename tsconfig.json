@@ -20,6 +20,9 @@
     "paths": {
       "@config/*": ["config/*"],
       "@app/*": ["app/*"],
+      "@auth/*": ["app/auth/*"],
+      "@users/*": ["app/users/*"],
+      "@common/*": ["app/common/*"],
       "@mail/*": ["mail/*"]
     }
   }

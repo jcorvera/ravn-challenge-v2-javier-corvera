@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { hashSync } from 'bcrypt';
 
 export const roles = [
   {
@@ -34,16 +35,17 @@ export const images = Array.from({ length: Math.random() * 5 + 1 }).map(() => ({
   src: faker.image.fashion(),
 }));
 
-export const admin = {
+// Manager by default on dev environment (ONLY FOR TEST PURPOSES)
+export const manager = {
   profilePicture: faker.image.avatar(),
   firstName: faker.name.firstName(),
   lastName: faker.name.lastName(),
-  email: faker.internet.email(),
+  email: 'manager-store@gmail.com',
   phoneNumber: faker.phone.number(),
-  password: 'password', // Password
+  password: hashSync('password', 10),
   roles: {
     create: {
-      roleId: 1,
+      roleId: 2,
     },
   },
 };
@@ -62,27 +64,13 @@ export const articles = Array.from({ length: 100 }).map(() => ({
   },
 }));
 
-export const managers = Array.from({ length: 2 }).map(() => ({
+export const clients = Array.from({ length: 6 }).map(() => ({
   profilePicture: faker.image.avatar(),
   firstName: faker.name.firstName(),
   lastName: faker.name.lastName(),
   email: faker.internet.email(),
   phoneNumber: faker.phone.number(),
-  password: 'password', // Password
-  roles: {
-    create: {
-      roleId: 2,
-    },
-  },
-}));
-
-export const clients = Array.from({ length: 4 }).map(() => ({
-  profilePicture: faker.image.avatar(),
-  firstName: faker.name.firstName(),
-  lastName: faker.name.lastName(),
-  email: faker.internet.email(),
-  phoneNumber: faker.phone.number(),
-  password: 'password', // Password
+  password: hashSync('password', 10),
   roles: {
     create: {
       roleId: 3,
