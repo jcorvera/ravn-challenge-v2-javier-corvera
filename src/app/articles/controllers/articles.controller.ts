@@ -1,5 +1,16 @@
-import { Controller, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Get, Request } from '@nestjs/common';
-import { ArticlesService } from '../services/articles.service';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Get,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { CreateArticleDto } from '../dto/create-article.dto';
 import { UpdateArticleDto } from '../dto/update-article.dto';
 import {
@@ -16,6 +27,8 @@ import {
 } from '@nestjs/swagger';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/enums/roles.enum';
+import { ArticlesService, LikesArticlesService } from '../services';
+import { QueryArticleDto } from '../dto/query-article.dto';
 
 @ApiBearerAuth()
 @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
@@ -23,7 +36,10 @@ import { Role } from '@common/enums/roles.enum';
 @ApiTags('Articles')
 @Controller('articles')
 export class ArticlesController {
-  constructor(private readonly articlesService: ArticlesService) {}
+  constructor(
+    private readonly articlesService: ArticlesService,
+    private readonly likesArticlesService: LikesArticlesService,
+  ) {}
 
   @Roles(Role.Manager)
   @Post()
@@ -47,12 +63,12 @@ export class ArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Articles found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findAll(@Request() req) {
+  findAll(@Query() queryArticleDto: QueryArticleDto, @Request() req) {
     const role = req.user ? req.user.roles[0].role.name : null;
     if (role === Role.Client) {
-      return this.articlesService.findAll(req.user ? +req.user.id : null);
+      return this.articlesService.findAll(null, req.user ? +req.user.id : null);
     }
-    return this.articlesService.findAll();
+    return this.articlesService.findAll(queryArticleDto);
   }
 
   @Roles(Role.Client)
@@ -61,7 +77,7 @@ export class ArticlesController {
   @ApiCreatedResponse({ description: 'Like posted successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
   likeArticle(@Param('uuid') id: string, @Request() req) {
-    return this.articlesService.likeArticle(id, req.user ? +req.user.id : null);
+    return this.likesArticlesService.likeArticle(id, req.user ? +req.user.id : null);
   }
 
   @Roles(Role.Manager)

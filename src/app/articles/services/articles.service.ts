@@ -3,10 +3,21 @@ import { CreateArticleDto } from '../dto/create-article.dto';
 import { UpdateArticleDto } from '../dto/update-article.dto';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { CategoriesService } from './categories.service';
+import { QueryArticleDto } from '../dto/query-article.dto';
+import { pagination } from '../../common/utils/pagination';
 
 @Injectable()
 export class ArticlesService {
   constructor(private prisma: PrismaService, private categories: CategoriesService) {}
+
+  async count(queryArticleDto: QueryArticleDto) {
+    let whereArticles = {};
+    if (queryArticleDto.categoryId) {
+      whereArticles = { categoryId: +queryArticleDto.categoryId, deleted: false };
+    }
+
+    return this.prisma.article.count({ where: { deleted: false, ...whereArticles } });
+  }
 
   async findByUuid(uuid: string) {
     return this.prisma.article.findUnique({ where: { uuid: uuid } });
@@ -17,7 +28,6 @@ export class ArticlesService {
     if (userId) {
       likeIt = { likes: { select: { userId: true }, where: { userId: userId, articleId: uuid } } };
     }
-
     const article = await this.prisma.article.findUnique({
       where: { uuid: uuid },
       select: {
@@ -41,14 +51,22 @@ export class ArticlesService {
     return article;
   }
 
-  async findAll(userId?: number) {
+  async findAll(queryArticleDto: QueryArticleDto, userId?: number) {
     let likeIt = {};
+    let whereArticles = {};
+    const { page, pageSize } = queryArticleDto;
+    const total = await this.count(queryArticleDto);
+
     if (userId) {
       likeIt = { likes: { select: { userId: true }, where: { userId: userId } } };
     }
 
-    return this.prisma.article.findMany({
-      where: { deleted: false },
+    if (queryArticleDto.categoryId) {
+      whereArticles = { categoryId: +queryArticleDto.categoryId, deleted: false };
+    }
+
+    const articles = await this.prisma.article.findMany({
+      where: { deleted: false, ...whereArticles },
       select: {
         uuid: true,
         title: true,
@@ -61,7 +79,12 @@ export class ArticlesService {
         totalLike: true,
         ...likeIt,
       },
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
+
+    return { articles, ...pagination(total, page, pageSize) };
   }
 
   async create(createArticleDto: CreateArticleDto) {
@@ -79,32 +102,6 @@ export class ArticlesService {
     }
 
     return this.prisma.article.update({ where: { uuid }, data: { ...updateArticleDto } });
-  }
-
-  async likeArticle(uuid: string, userId: number) {
-    let count = 0;
-    const article = await this.findByUuid(uuid);
-
-    if (!article || article.deleted) {
-      throw new NotFoundException();
-    }
-
-    // Dislike if alredy liked
-    const AlreadyLike = await this.prisma.userArticleLike.deleteMany({
-      where: { articleId: article.uuid, userId: userId },
-    });
-    count = article.totalLike - 1;
-
-    // Like if not liked
-    if (AlreadyLike.count == 0) {
-      await this.prisma.userArticleLike.create({ data: { articleId: article.uuid, userId: userId } });
-      count = article.totalLike + 1;
-    }
-
-    // Update total like
-    await this.update(uuid, { totalLike: count });
-
-    return { liked: AlreadyLike.count === 0 };
   }
 
   async remove(uuid: string) {

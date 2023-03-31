@@ -1,4 +1,4 @@
-import { Controller, Get, Param, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ArticlesService } from '../services/articles.service';
 import {
   ApiInternalServerErrorResponse,
@@ -8,6 +8,7 @@ import {
   ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
 import { Public } from '@common/decorators/public.decorator';
+import { QueryArticleDto } from '../dto/query-article.dto';
 
 @Public()
 @ApiTags('Articles')
@@ -29,7 +30,7 @@ export class publicArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Articles found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findAll() {
-    return this.articlesService.findAll();
+  findAll(@Query() queryArticleDto: QueryArticleDto) {
+    return this.articlesService.findAll(queryArticleDto);
   }
 }
