@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { HttpExceptionFilter } from 'exceptions/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +21,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  // -- Handler exception filters
+  app.useGlobalFilters(new HttpExceptionFilter());
+
   // -- CORS
   app.enableCors({
     origin: true,
@@ -34,7 +38,7 @@ async function bootstrap() {
   );
 
   await app.listen(Number(process.env.APP_PORT), () => {
-    console.info(`Listening on port $process.env.APP_PORT}`);
+    console.info(`Listening on port ${process.env.APP_PORT}`);
   });
 }
 bootstrap();

@@ -3,14 +3,14 @@ module.exports = {
   parserOptions: {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
-    sourceType: 'module'
+    sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
   root: true,
   env: {
     node: true,
-    jest: true
+    jest: true,
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
@@ -22,8 +22,8 @@ module.exports = {
     'prettier/prettier': [
       'error',
       {
-        endOfLine: 'auto'
-      }
+        endOfLine: 'auto',
+      },
     ],
     'no-unused-expressions': 'error',
     'no-fallthrough': 'error',
@@ -57,7 +57,7 @@ module.exports = {
     'capitalized-comments': ['error'],
     'no-continue': 'error',
     'no-return-await': 'error',
-    complexity: ['error', { max: 2 }],
+    complexity: ['error', { max: 8 }],
     'no-empty': 'error',
     'no-nested-ternary': 'error',
     'no-empty-function': 'off',
@@ -69,8 +69,8 @@ module.exports = {
         functions: true,
         classes: true,
         variables: true,
-        allowNamedExports: false
-      }
-    ]
-  }
+        allowNamedExports: false,
+      },
+    ],
+  },
 };
