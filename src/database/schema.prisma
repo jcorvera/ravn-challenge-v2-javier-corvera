@@ -82,6 +82,7 @@ model Article {
   published   Boolean @default(false)
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @updatedAt @map(name: "updated_at")
+  deleted     Boolean @default(false)
   category    Category @relation(fields: [categoryId], references: [id])
   categoryId  Int @map(name: "category_id")
   images      ArticleImage[]
@@ -104,8 +105,8 @@ model ArticleImage {
 model UserArticleLike {
   user        User @relation(fields: [userId], references: [id])
   userId      Int  @map(name: "user_id")
-  article     Article @relation(fields: [articleId], references: [id])
-  articleId   Int  @map(name: "article_id")
+  article     Article @relation(fields: [articleId], references: [uuid])
+  articleId   String  @map(name: "article_id")
   createdAt   DateTime @default(now())  @map(name: "created_at")
 
   @@id([userId, articleId])

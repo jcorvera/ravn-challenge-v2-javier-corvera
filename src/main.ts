@@ -11,6 +11,7 @@ async function bootstrap() {
   // -- Prisma
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
+
   // -- Swagger
   const config = new DocumentBuilder()
     .setTitle('Clothes API Store')
