@@ -5,7 +5,7 @@ import { IS_PUBLIC_KEY } from '@common/decorators/public.decorator';
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard as JwtGuard } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
-import { UsersService } from '../../users/services/users.service';
+import { UsersService } from '@users/services/users.service';
 
 @Injectable()
 export class AuthGuard extends JwtGuard('jwt') implements CanActivate {

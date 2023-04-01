@@ -17,7 +17,7 @@ import { FindArticlesService } from '../services';
 @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
 @ApiBadRequestResponse({ description: 'Bad request.' })
 @Controller('public/articles')
-export class publicArticlesController {
+export class PublicArticlesController {
   constructor(private readonly findArticlesService: FindArticlesService) {}
 
   @Get(':uuid')
@@ -30,7 +30,7 @@ export class publicArticlesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({ description: 'Articles found successfully.' })
+  @ApiOkResponse({ description: 'Articles returned successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
   findAll(@Query() queryArticleDto: QueryArticleDto) {
     return this.findArticlesService.findAllArticles(true, queryArticleDto);
