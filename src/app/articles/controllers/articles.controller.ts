@@ -26,7 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/enums/roles.enum';
-import { ArticlesService, LikesArticlesService } from '../services';
+import { ArticlesService, FindArticlesService, LikesArticlesService } from '../services';
 import { CreateArticleDto, QueryArticleDto, UpdateArticleDto } from '../dto';
 
 @ApiBearerAuth()
@@ -38,6 +38,7 @@ export class ArticlesController {
   constructor(
     private readonly articlesService: ArticlesService,
     private readonly likesArticlesService: LikesArticlesService,
+    private readonly findArticlesService: FindArticlesService,
   ) {}
 
   @Roles(Role.Manager)
@@ -55,8 +56,9 @@ export class ArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Article found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findOne(@Param('uuid') id: string, @Request() req) {
-    return this.articlesService.findOne(id, req.user ? +req.user.id : null);
+  findOne(@Param('uuid') uuid: string, @Request() req) {
+    const { user } = req;
+    return this.findArticlesService.findOneArticle(false, uuid, user);
   }
 
   @Get()
@@ -64,11 +66,8 @@ export class ArticlesController {
   @ApiOkResponse({ description: 'Articles found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
   findAll(@Query() queryArticleDto: QueryArticleDto, @Request() req) {
-    const role = req.user ? req.user.roles[0].role.name : null;
-    if (role === Role.Client) {
-      return this.articlesService.findAll(null, req.user ? +req.user.id : null);
-    }
-    return this.articlesService.findAll(queryArticleDto);
+    const { user } = req;
+    return this.findArticlesService.findAllArticles(false, queryArticleDto, user);
   }
 
   @Roles(Role.Client)

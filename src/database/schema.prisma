@@ -79,6 +79,7 @@ model Article {
   title       String
   description String?
   price       Decimal  @db.Decimal(9,2)
+  quantity    Int @default(0)
   published   Boolean @default(false)
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @updatedAt @map(name: "updated_at")

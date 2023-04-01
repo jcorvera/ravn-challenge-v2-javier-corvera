@@ -2,6 +2,7 @@ import { S3Service } from '@common/s3/services/s3.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ArticlesService } from '../articles/articles.service';
 import { PrismaService } from '@app/prisma/prisma.service';
+import { FindArticlesService } from '../articles/find-articles.service';
 
 type Src = {
   src: string;
@@ -11,8 +12,8 @@ type Src = {
 export class ImagesArticlesService {
   constructor(
     private readonly s3Service: S3Service,
-    private articlesService: ArticlesService,
     private prisma: PrismaService,
+    private findArticlesService: FindArticlesService,
   ) {}
 
   async saveImages(id: number, images: Src[]) {
@@ -24,7 +25,7 @@ export class ImagesArticlesService {
   }
 
   async uploadImages(uuid: string, images: Express.Multer.File[]) {
-    const article = await this.articlesService.findByUuid(uuid);
+    const article = await this.findArticlesService.findByUuid(uuid);
     if (!article) {
       throw new NotFoundException();
     }
