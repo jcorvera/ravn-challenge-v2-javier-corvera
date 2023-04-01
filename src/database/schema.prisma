@@ -1,0 +1,148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role{
+  id        Int @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  users     UserRoles[]
+
+  @@map(name: "roles")
+}
+
+model User {
+  id              Int @id @default(autoincrement())
+  uuid             String @unique @default(uuid())
+  profilePicture   String? @map(name: "profile_picture")
+  firstName        String @map(name: "first_name")
+  lastName         String @map(name: "last_name")
+  email            String @unique
+  phoneNumber      String? @map(name:"phone_number")
+  password         String
+  hashRefreshToken String? @map(name: "hash_refresh_token")
+  isActive         Boolean @default(true) @map(name: "is_active")
+  createdAt        DateTime @default(now()) @map(name: "created_at")
+  updatedAt        DateTime @updatedAt @map(name: "updated_at")
+  roles            UserRoles[]
+  address          UserAddress?
+  likes            UserArticleLike[]
+  orders           Order[]
+  @@map(name:"users")
+}
+
+model UserAddress {
+  id          Int @id @default(autoincrement())
+  city        String
+  address     String
+  postalCode  String? @map(name: "postal_code")
+  user        User   @relation(fields: [userId], references: [id])
+  userId      Int    @unique @map(name: "user_id")
+
+  @@map(name: "user_address")
+}
+
+model UserRoles {
+  user        User @relation(fields: [userId], references: [id])
+  userId      Int  @map(name: "user_id")
+  role        Role @relation(fields: [roleId], references: [id])
+  roleId      Int  @map(name: "role_id")
+  createdAt   DateTime @default(now())  @map(name: "created_at")
+  updatedAt   DateTime @updatedAt @map(name: "updated_at")
+
+  @@id([userId, roleId])
+  @@map(name:"user_roles")
+}
+
+model Category {
+  id        Int @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  articles Article[]
+
+  @@map(name:"categories")
+}
+
+model Article {
+  id          Int @id @default(autoincrement())
+  uuid        String @unique @default(uuid())
+  title       String
+  description String?
+  price       Decimal  @db.Decimal(9,2)
+  published   Boolean @default(false)
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @updatedAt @map(name: "updated_at")
+  deleted     Boolean @default(false)
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  Int @map(name: "category_id")
+  images      ArticleImage[]
+  likes       UserArticleLike[]
+  orders      OrderDetail[]
+  totalLike   Int @default(0)
+
+  @@map(name:"articles")
+}
+
+model ArticleImage {
+  id         Int @id @default(autoincrement())
+  src        String
+  article    Article @relation(fields: [articleId], references: [id])
+  articleId  Int @map(name: "article_id")
+
+  @@map(name:"article_images")
+}
+
+model UserArticleLike {
+  user        User @relation(fields: [userId], references: [id])
+  userId      Int  @map(name: "user_id")
+  article     Article @relation(fields: [articleId], references: [uuid])
+  articleId   String  @map(name: "article_id")
+  createdAt   DateTime @default(now())  @map(name: "created_at")
+
+  @@id([userId, articleId])
+  @@map(name:"user_article_likes")
+}
+
+model Order {
+  id              Int @id @default(autoincrement())
+  uuid            String @unique @default(uuid()) 
+  customer        User @relation(fields: [customerId], references: [id])
+  customerId      Int @map(name: "customer_id")
+  paymentType     PaymentType @map(name: "payment_type")
+  total           Decimal  @db.Decimal(9,2)
+  subtotal        Decimal  @db.Decimal(9,2)
+  detail          OrderDetail[]
+  createdAt       DateTime @default(now())  @map(name: "created_at")
+}
+
+model OrderDetail {
+  id          Int @id @default(autoincrement())
+  articleName String @map(name:"article_name")
+  description String
+  price       Decimal  @db.Decimal(9,2)
+  quantity    Int
+  total       Decimal  @db.Decimal(9,2)
+  article     Article @relation(fields: [articleId], references: [id])
+  articleId   Int @map(name: "article_id")
+  order       Order @relation(fields: [orderId], references: [id])
+  orderId     Int @map(name: "order_id")
+  createdAt   DateTime @default(now())  @map(name: "created_at")
+}
+
+enum PaymentType {
+  CASH
+  CC
+  ACH
+}
+
+

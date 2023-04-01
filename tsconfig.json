@@ -9,7 +9,7 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -19,6 +19,11 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@config/*": ["config/*"],
+      "@app/*": ["app/*"],
+      "@auth/*": ["app/auth/*"],
+      "@users/*": ["app/users/*"],
+      "@common/*": ["app/common/*"],
+      "@articles/*": ["app/articles/*"],
       "@mail/*": ["mail/*"]
     }
   }
