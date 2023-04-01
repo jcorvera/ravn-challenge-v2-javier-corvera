@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateArticleDto {
   @ApiProperty({ type: String, description: 'title', example: 'Article title' })
@@ -27,6 +28,13 @@ export class CreateArticleDto {
   @IsOptional()
   @IsBoolean()
   published?: boolean;
+
+  @ApiProperty({ type: Number, description: 'quantity', required: false, example: 4 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  quantity: number;
 
   @ApiProperty({ type: Number, description: 'categoryId', example: 1 })
   @IsNumber()

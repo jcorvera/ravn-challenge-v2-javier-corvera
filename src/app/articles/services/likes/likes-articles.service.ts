@@ -1,14 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { ArticlesService } from '../articles/articles.service';
+import { FindArticlesService } from '../articles/find-articles.service';
 
 @Injectable()
 export class LikesArticlesService {
-  constructor(private prisma: PrismaService, private articlesService: ArticlesService) {}
+  constructor(
+    private prisma: PrismaService,
+    private articlesService: ArticlesService,
+    private findArticlesService: FindArticlesService,
+  ) {}
 
   async likeArticle(uuid: string, userId: number) {
     let count = 0;
-    const article = await this.articlesService.findByUuid(uuid);
+    const article = await this.findArticlesService.findByUuid(uuid);
 
     if (!article || article.deleted) {
       throw new NotFoundException();

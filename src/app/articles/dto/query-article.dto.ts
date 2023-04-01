@@ -10,4 +10,6 @@ export class QueryArticleDto extends QueryPaginationDto {
   @IsNumber()
   @Min(1)
   categoryId: number;
+
+  published?: boolean;
 }
