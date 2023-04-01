@@ -113,4 +113,18 @@ export class UsersService {
       throw new InternalServerErrorException();
     }
   }
+
+  async findAllCustomers() {
+    return this.prisma.user.findMany({
+      where: {
+        roles: {
+          some: {
+            role: {
+              name: Role.Client,
+            },
+          },
+        },
+      },
+    });
+  }
 }
