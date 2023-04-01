@@ -5,6 +5,7 @@ import { AuthModule } from '@auth/auth.module';
 import { UsersModule } from '@users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ArticlesModule } from './app/articles/articles.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
     }),
     AuthModule,
     UsersModule,
+    ArticlesModule,
   ],
   providers: [
     {

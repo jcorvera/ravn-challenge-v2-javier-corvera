@@ -62,7 +62,6 @@ module.exports = {
     'no-nested-ternary': 'error',
     'no-empty-function': 'off',
     '@typescript-eslint/no-empty-function': ['error'],
-    'no-undefined': 'error',
     'no-use-before-define': [
       'error',
       {

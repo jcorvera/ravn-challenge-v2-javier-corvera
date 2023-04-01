@@ -23,6 +23,7 @@
       "@auth/*": ["app/auth/*"],
       "@users/*": ["app/users/*"],
       "@common/*": ["app/common/*"],
+      "@articles/*": ["app/articles/*"],
       "@mail/*": ["mail/*"]
     }
   }
