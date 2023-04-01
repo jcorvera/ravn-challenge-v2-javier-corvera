@@ -101,6 +101,7 @@
       "@users/(.*)": "<rootDir>/app/users/$1",
       "@common/(.*)": "<rootDir>/app/common/$1",
       "@articles/(.*)": "<rootDir>/app/articles/$1",
+      "@orders/(.*)": "<rootDir>/app/orders/$1",
       "@mail/(.*)": "<rootDir>/mail/$1"
     }
   }
