@@ -19,5 +19,6 @@ import { S3Module } from '@common/s3/s3.module';
   imports: [PrismaModule, S3Module],
   controllers: [ArticlesController, PublicArticlesController, ImagesArticlesController, PublicCategoriesController],
   providers: [ArticlesService, CategoriesService, LikesArticlesService, ImagesArticlesService, FindArticlesService],
+  exports: [ArticlesService, FindArticlesService],
 })
 export class ArticlesModule {}

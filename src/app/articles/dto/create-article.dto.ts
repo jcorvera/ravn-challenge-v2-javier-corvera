@@ -34,7 +34,7 @@ export class CreateArticleDto {
   @Type(() => Number)
   @IsNumber()
   @Min(1)
-  quantity: number;
+  stock: number;
 
   @ApiProperty({ type: Number, description: 'categoryId', example: 1 })
   @IsNumber()

@@ -79,7 +79,7 @@ model Article {
   title       String
   description String?
   price       Decimal  @db.Decimal(9,2)
-  quantity    Int @default(0)
+  stock       Int @default(0)
   published   Boolean @default(false)
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @updatedAt @map(name: "updated_at")
@@ -121,9 +121,10 @@ model Order {
   customerId      Int @map(name: "customer_id")
   paymentType     PaymentType @map(name: "payment_type")
   total           Decimal  @db.Decimal(9,2)
-  subtotal        Decimal  @db.Decimal(9,2)
   detail          OrderDetail[]
   createdAt       DateTime @default(now())  @map(name: "created_at")
+
+  @@map(name:"orders")
 }
 
 model OrderDetail {
@@ -138,6 +139,8 @@ model OrderDetail {
   order       Order @relation(fields: [orderId], references: [id])
   orderId     Int @map(name: "order_id")
   createdAt   DateTime @default(now())  @map(name: "created_at")
+
+  @@map(name: "order_details")
 }
 
 enum PaymentType {
