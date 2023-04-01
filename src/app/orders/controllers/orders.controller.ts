@@ -3,6 +3,7 @@ import { FindOrdersService } from '../services';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/enums/roles.enum';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -24,9 +25,10 @@ export class OrdersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Orders returned successfully.' })
+  @ApiBadRequestResponse({ description: 'Bad request.' })
   findAll(@Query() queryOrderDto: QueryOrderDto, @Request() req) {
     const { user } = req;
-    return this.findOrdersService.findAllOrders(user, queryOrderDto);
+    return this.findOrdersService.findAllOrders(queryOrderDto, user);
   }
 
   @Get(':uuid')

@@ -49,15 +49,15 @@ export class FindOrdersService {
   }
 
   async findOneOrder(uuid: string, user: AuthResponseDoc) {
+    console.info(user);
     if (user && userIsClient(user)) {
       return this.findOne(uuid, { customer: { id: user.id } });
     }
     return this.findOne(uuid);
   }
 
-  async findAllOrders(user: AuthResponseDoc, queryPaginationDto: QueryPaginationDto) {
+  async findAllOrders(queryPaginationDto: QueryPaginationDto, user: AuthResponseDoc) {
     let customerQuery = {};
-
     if (user && userIsClient(user)) {
       return this.findAll(queryPaginationDto, { customer: { id: user.id } });
     }

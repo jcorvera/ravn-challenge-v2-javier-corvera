@@ -19,28 +19,28 @@ import { QueryPaginationDto } from '@common/dto/query-pagination.dto';
 @Roles(Role.Client)
 @ApiBearerAuth()
 @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
+@ApiBadRequestResponse({ description: 'Bad request.' })
 @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
+@ApiForbiddenResponse({ description: 'Forbidden.' })
 @ApiTags('Orders')
-@Controller('orders')
+@Controller()
 export class ClientsOrdersController {
   constructor(private readonly ordersService: OrdersService, private readonly findOrdersService: FindOrdersService) {}
 
-  @Post()
+  @Post('orders')
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({ description: 'Article created successfully.' })
-  @ApiBadRequestResponse({ description: 'Bad request.' })
-  @ApiForbiddenResponse({ description: 'Forbidden.' })
   @ApiBody({ type: CreateOrderDto })
   create(@Body() createOrderDto: CreateOrderDto, @Request() req) {
     const { user } = req;
     return this.ordersService.create(createOrderDto, user);
   }
 
-  @Get('mine-orders')
+  @Get('/my-orders')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Orders returned successfully.' })
   findAll(@Query() queryPaginationDto: QueryPaginationDto, @Request() req) {
     const { user } = req;
-    return this.findOrdersService.findAllOrders(user, queryPaginationDto);
+    return this.findOrdersService.findAllOrders(queryPaginationDto, user);
   }
 }
