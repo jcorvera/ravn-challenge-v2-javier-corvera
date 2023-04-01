@@ -1,6 +1,5 @@
 import { S3Service } from '@common/s3/services/s3.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ArticlesService } from '../articles/articles.service';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { FindArticlesService } from '../articles/find-articles.service';
 

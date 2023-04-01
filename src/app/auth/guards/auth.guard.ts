@@ -5,10 +5,11 @@ import { IS_PUBLIC_KEY } from '@common/decorators/public.decorator';
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard as JwtGuard } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
+import { UsersService } from '../../users/services/users.service';
 
 @Injectable()
 export class AuthGuard extends JwtGuard('jwt') implements CanActivate {
-  constructor(private jwtService: JwtService, private reflector: Reflector) {
+  constructor(private jwtService: JwtService, private reflector: Reflector, private usersService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.ACCESS_TOKEN_SECRET,
@@ -38,6 +39,11 @@ export class AuthGuard extends JwtGuard('jwt') implements CanActivate {
       });
 
       request['user'] = payload;
+      const user = await this.usersService.findOne(payload.email);
+
+      if (user.hashRefreshToken === null) {
+        throw new UnauthorizedException();
+      }
     } catch {
       throw new UnauthorizedException();
     }
