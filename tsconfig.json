@@ -24,6 +24,7 @@
       "@users/*": ["app/users/*"],
       "@common/*": ["app/common/*"],
       "@articles/*": ["app/articles/*"],
+      "@orders/*": ["app/orders/*"],
       "@mail/*": ["mail/*"]
     }
   }
