@@ -1,6 +1,7 @@
 import { Controller, Get, Param, HttpCode, HttpStatus, Query } from '@nestjs/common';
-import { ArticlesService } from '../services/articles.service';
+import { ArticlesService } from '../services/articles/articles.service';
 import {
+  ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -14,6 +15,7 @@ import { QueryArticleDto } from '../dto/query-article.dto';
 @ApiTags('Articles')
 @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
 @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
+@ApiBadRequestResponse({ description: 'Bad request.' })
 @Controller('public/articles')
 export class publicArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}

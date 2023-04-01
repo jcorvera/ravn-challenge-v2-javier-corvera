@@ -11,13 +11,12 @@ import {
   Request,
   Query,
 } from '@nestjs/common';
-import { CreateArticleDto } from '../dto/create-article.dto';
-import { UpdateArticleDto } from '../dto/update-article.dto';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -28,7 +27,7 @@ import {
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/enums/roles.enum';
 import { ArticlesService, LikesArticlesService } from '../services';
-import { QueryArticleDto } from '../dto/query-article.dto';
+import { CreateArticleDto, QueryArticleDto, UpdateArticleDto } from '../dto';
 
 @ApiBearerAuth()
 @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
@@ -46,6 +45,7 @@ export class ArticlesController {
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({ description: 'Article created successfully.' })
   @ApiBadRequestResponse({ description: 'Bad request.' })
+  @ApiForbiddenResponse({ description: 'Forbidden.' })
   @ApiBody({ type: CreateArticleDto })
   create(@Body() createArticleDto: CreateArticleDto) {
     return this.articlesService.create(createArticleDto);
@@ -76,6 +76,7 @@ export class ArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiCreatedResponse({ description: 'Like posted successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
+  @ApiForbiddenResponse({ description: 'Forbidden.' })
   likeArticle(@Param('uuid') id: string, @Request() req) {
     return this.likesArticlesService.likeArticle(id, req.user ? +req.user.id : null);
   }
@@ -84,6 +85,7 @@ export class ArticlesController {
   @Patch(':uuid')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Article updated successfully.' })
+  @ApiForbiddenResponse({ description: 'Forbidden.' })
   update(@Param('uuid') uuid: string, @Body() updateArticleDto: UpdateArticleDto) {
     return this.articlesService.update(uuid, updateArticleDto);
   }
@@ -93,6 +95,7 @@ export class ArticlesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse({ description: 'Article deleted successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
+  @ApiForbiddenResponse({ description: 'Forbidden.' })
   remove(@Param('uuid') uuid: string) {
     return this.articlesService.remove(uuid);
   }

@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateArticleDto } from '../dto/create-article.dto';
-import { UpdateArticleDto } from '../dto/update-article.dto';
+import { CreateArticleDto } from '../../dto/create-article.dto';
+import { UpdateArticleDto } from '../../dto/update-article.dto';
 import { PrismaService } from '@app/prisma/prisma.service';
-import { CategoriesService } from './categories.service';
-import { QueryArticleDto } from '../dto/query-article.dto';
-import { pagination } from '../../common/utils/pagination';
+import { CategoriesService } from '../categories/categories.service';
+import { QueryArticleDto } from '../../dto/query-article.dto';
+import { pagination } from '@common/utils/index';
 
 @Injectable()
 export class ArticlesService {
