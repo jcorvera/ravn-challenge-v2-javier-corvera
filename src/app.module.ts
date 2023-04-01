@@ -4,8 +4,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '@auth/auth.module';
 import { UsersModule } from '@users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { OrdersModule } from '@orders/orders.module';
 import { ArticlesModule } from '@articles/articles.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ArticlesModule } from '@articles/articles.module';
     AuthModule,
     UsersModule,
     ArticlesModule,
+    OrdersModule,
   ],
   providers: [
     {
