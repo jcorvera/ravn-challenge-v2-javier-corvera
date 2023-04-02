@@ -3,6 +3,10 @@ import { ArticleResponseDoc } from '@articles/doc/article.response.doc';
 import { UpdateArticleDto, CreateArticleDto, QueryArticleDto } from '@app/articles/dto';
 import { AuthResponseDoc } from '@auth/doc/auth-response.doc';
 import { Role } from '../enums/roles.enum';
+import { PaymentType } from '../enums/payment-type.enum';
+import { QueryOrderDto } from '@app/orders/dto/query-order.dto';
+import { CreateOrderDto } from '@app/orders/dto/create-order.dto';
+import { articles } from '../../../database/seeds/data';
 
 // -- Data
 export const imagesFaker = Array.from({ length: 2 }).map(() => ({
@@ -61,6 +65,31 @@ export const mockFiles: Express.Multer.File[] = [
   },
 ];
 
+export const orderDetailFaker = Array.from({ length: 1 }).map(() => ({
+  id: faker.datatype.number(),
+  articleName: faker.commerce.productName(),
+  description: faker.lorem.paragraph(),
+  price: faker.datatype.number(),
+  quantity: faker.datatype.number(),
+  total: faker.datatype.number(),
+  article: null,
+  articleId: faker.datatype.number(),
+  order: null,
+  orderId: faker.datatype.number(),
+  createdAt: faker.date.past(),
+}));
+
+export const ordersFake = Array.from({ length: 5 }).map(() => ({
+  id: 1,
+  uuid: faker.datatype.uuid(),
+  customer: null,
+  customerId: faker.datatype.number(),
+  paymentType: PaymentType.CASH,
+  total: faker.datatype.number(),
+  detail: [{ ...orderDetailFaker[0], orderId: 1 }],
+  createdAt: faker.date.past(),
+}));
+
 // -- Dtos
 
 export const createArticleFaker = (article: ArticleResponseDoc): CreateArticleDto => {
@@ -90,6 +119,14 @@ export const queryArticleFaker = (page: number, pageSize: number, categoryId?: n
     page: 1,
     pageSize: 10,
     categoryId,
+  };
+};
+
+export const queryOrderFaker = (page: number, pageSize: number, customerUuid?: string): QueryOrderDto => {
+  return {
+    page: 1,
+    pageSize: 10,
+    customerUuid,
   };
 };
 

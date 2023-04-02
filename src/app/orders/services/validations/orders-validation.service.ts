@@ -48,7 +48,7 @@ export class OrdersValidationService {
     return mapOrderDetail;
   }
 
-  async validateQuantity(articles: ArticleResponseDoc[], createOrderDto: CreateOrderDto): Promise<void | never> {
+  validateQuantity(articles: ArticleResponseDoc[], createOrderDto: CreateOrderDto): void | never {
     const message: string[] = [];
     const { orderDetail } = createOrderDto;
 
@@ -66,10 +66,7 @@ export class OrdersValidationService {
     }
   }
 
-  async validateIfIdsAlreadyExist(
-    articles: ArticleResponseDoc[],
-    createOrderDto: CreateOrderDto,
-  ): Promise<void | never> {
+  validateIfIdsAlreadyExist(articles: ArticleResponseDoc[], createOrderDto: CreateOrderDto): void | never {
     const message: string[] = [];
     const { orderDetail } = createOrderDto;
     const articlesIds = articles.map((article) => article.uuid);
@@ -97,8 +94,8 @@ export class OrdersValidationService {
 
   async validateArticles(createOrderDto: CreateOrderDto): Promise<OrderType | never> {
     const articles = await this.getArticles(createOrderDto);
-    await this.validateIfIdsAlreadyExist(articles, createOrderDto);
-    await this.validateQuantity(articles, createOrderDto);
+    this.validateIfIdsAlreadyExist(articles, createOrderDto);
+    this.validateQuantity(articles, createOrderDto);
     this.validateDuplicateIds(createOrderDto);
     const total = this.calculateTotalPrice(createOrderDto.orderDetail, articles);
     const mapOrderDetail = this.mapOrderDetail(createOrderDto.orderDetail, articles);
