@@ -10,6 +10,7 @@ import {
 } from '@nestjs/swagger';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/enums/roles.enum';
+import { UserResponseDoc } from '../doc/user.response.doc';
 
 @Roles(Role.Manager)
 @ApiBearerAuth()
@@ -24,7 +25,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Articles found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findAll() {
+  findAll(): Promise<UserResponseDoc[]> {
     return this.usersService.findAllCustomers();
   }
 }

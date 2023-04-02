@@ -1,3 +1,4 @@
+import { CategoryResponseDoc } from '@app/articles/doc/category.response.doc';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
@@ -5,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(): Promise<CategoryResponseDoc[]> {
     return this.prisma.category.findMany({
       select: {
         id: true,
@@ -14,7 +15,7 @@ export class CategoriesService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<CategoryResponseDoc> {
     return this.prisma.category.findUnique({
       where: { id },
       select: {

@@ -10,6 +10,8 @@ import {
 import { Public } from '@common/decorators/public.decorator';
 import { QueryArticleDto } from '../dto/query-article.dto';
 import { FindArticlesService } from '../services';
+import { ArticleResponseDoc } from '../doc/article.response.doc';
+import { ArticlePaginationResponseDoc } from '../doc/article-pagination-response.doc';
 
 @Public()
 @ApiTags('Articles')
@@ -24,7 +26,7 @@ export class PublicArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Article found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findOne(@Param('uuid') uuid: string) {
+  findOne(@Param('uuid') uuid: string): Promise<ArticleResponseDoc | never> {
     return this.findArticlesService.findOneArticle(true, uuid);
   }
 
@@ -32,7 +34,7 @@ export class PublicArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Articles returned successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findAll(@Query() queryArticleDto: QueryArticleDto) {
+  findAll(@Query() queryArticleDto: QueryArticleDto): Promise<ArticlePaginationResponseDoc | never> {
     return this.findArticlesService.findAllArticles(true, queryArticleDto);
   }
 }

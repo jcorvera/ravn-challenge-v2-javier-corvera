@@ -16,6 +16,7 @@ import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/enums/roles.enum';
 import { imageMulterOptions, swaggerSchemaBodyForFileArray } from '@app/common/utils';
 import { ImagesArticlesService } from '../services/images/images-articles.service';
+import { ImagesUploadType } from '@common/types/images-upload.type';
 
 @ApiBearerAuth()
 @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
@@ -35,7 +36,7 @@ export class ImagesArticlesController {
   @ApiCreatedResponse({ description: 'Images stored successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
   @ApiForbiddenResponse({ description: 'Forbidden.' })
-  findOne(@Param('uuid') uuid: string, @UploadedFiles() files: Express.Multer.File[]) {
+  findOne(@Param('uuid') uuid: string, @UploadedFiles() files: Express.Multer.File[]): Promise<ImagesUploadType> {
     return this.imagesArticlesService.uploadImages(uuid, files);
   }
 }

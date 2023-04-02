@@ -1,29 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { AuthResponseDoc } from '@auth/doc/auth-response.doc';
-import { pagination, userIsClient } from '@common/utils';
+import { pagination, selectColumnsFromArticle, userIsClient } from '@common/utils';
 import { QueryOrderDto } from '../../dto/query-order.dto';
 import { QueryPaginationDto } from '@common/dto/query-pagination.dto';
+import { OrderResponseDoc } from '@orders/doc/order.response.doc';
+import { OrderPaginationResponseDoc } from '@orders/doc/order-pagination.response.doc';
 
 @Injectable()
 export class FindOrdersService {
   constructor(private prisma: PrismaService) {}
 
-  async count(whereArticles = {}) {
+  async count(whereArticles = {}): Promise<number> {
     return this.prisma.order.count({ where: { ...whereArticles } });
   }
 
-  async findAll(queryPaginationDto: QueryPaginationDto, whereOrder = {}) {
+  async findAll(queryPaginationDto: QueryPaginationDto, whereOrder = {}): Promise<OrderPaginationResponseDoc> {
     const { page, pageSize } = queryPaginationDto;
     const total = await this.count(whereOrder);
 
     const orders = await this.prisma.order.findMany({
+      select: { ...selectColumnsFromArticle },
       where: {
         ...whereOrder,
-      },
-      include: {
-        detail: true,
-        customer: true,
       },
       orderBy: { createdAt: 'desc' },
       skip: (page - 1) * pageSize,
@@ -33,13 +32,10 @@ export class FindOrdersService {
     return { orders, ...pagination(total, page, pageSize) };
   }
 
-  async findOne(uuid: string, whereArticle = {}) {
+  async findOne(uuid: string, whereArticle = {}): Promise<OrderResponseDoc | never> {
     const order = await this.prisma.order.findFirst({
+      select: { ...selectColumnsFromArticle },
       where: { uuid, ...whereArticle },
-      include: {
-        detail: true,
-        customer: true,
-      },
     });
 
     if (!order) {
@@ -48,15 +44,17 @@ export class FindOrdersService {
     return order;
   }
 
-  async findOneOrder(uuid: string, user: AuthResponseDoc) {
-    console.info(user);
+  async findOneOrder(uuid: string, user: AuthResponseDoc): Promise<OrderResponseDoc | never> {
     if (user && userIsClient(user)) {
       return this.findOne(uuid, { customer: { id: user.id } });
     }
     return this.findOne(uuid);
   }
 
-  async findAllOrders(queryPaginationDto: QueryPaginationDto, user: AuthResponseDoc) {
+  async findAllOrders(
+    queryPaginationDto: QueryPaginationDto,
+    user: AuthResponseDoc,
+  ): Promise<OrderPaginationResponseDoc> {
     let customerQuery = {};
     if (user && userIsClient(user)) {
       return this.findAll(queryPaginationDto, { customer: { id: user.id } });

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { Public } from '@common/decorators/public.decorator';
 import { CategoriesService } from '../services/categories/categories.service';
+import { CategoryResponseDoc } from '../doc/category.response.doc';
 
 @Public()
 @ApiTags('Categories')
@@ -23,7 +24,7 @@ export class PublicCategoriesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Categories returned successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findAll() {
+  findAll(): Promise<CategoryResponseDoc[]> {
     return this.categoriesService.findAll();
   }
 }

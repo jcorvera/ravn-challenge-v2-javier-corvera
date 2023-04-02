@@ -78,7 +78,7 @@ model Article {
   uuid        String @unique @default(uuid())
   title       String
   description String?
-  price       Decimal  @db.Decimal(9,2)
+  price       Float  
   stock       Int @default(0)
   published   Boolean @default(false)
   createdAt   DateTime @default(now()) @map(name: "created_at")
@@ -120,7 +120,7 @@ model Order {
   customer        User @relation(fields: [customerId], references: [id])
   customerId      Int @map(name: "customer_id")
   paymentType     PaymentType @map(name: "payment_type")
-  total           Decimal  @db.Decimal(9,2)
+  total           Float  
   detail          OrderDetail[]
   createdAt       DateTime @default(now())  @map(name: "created_at")
 
@@ -131,9 +131,9 @@ model OrderDetail {
   id          Int @id @default(autoincrement())
   articleName String @map(name:"article_name")
   description String
-  price       Decimal  @db.Decimal(9,2)
+  price       Float  
   quantity    Int
-  total       Decimal  @db.Decimal(9,2)
+  total       Float  
   article     Article @relation(fields: [articleId], references: [id])
   articleId   Int @map(name: "article_id")
   order       Order @relation(fields: [orderId], references: [id])
