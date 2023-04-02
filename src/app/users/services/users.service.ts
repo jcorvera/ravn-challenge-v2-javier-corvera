@@ -1,6 +1,6 @@
 import { PrismaService } from '@app/prisma/prisma.service';
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import { UserEntity } from '@app/users/doc/user.response';
+import { UserResponseDoc } from '@users/doc/user.response.doc';
 import { SignUpDto } from '@auth/dto/sign-up.dto';
 import { Role } from '@app/common/enums/roles.enum';
 
@@ -8,7 +8,7 @@ import { Role } from '@app/common/enums/roles.enum';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(email: string): Promise<UserEntity> {
+  async findOne(email: string): Promise<UserResponseDoc> {
     return this.prisma.user.findUnique({
       where: { email },
       select: {
@@ -50,7 +50,7 @@ export class UsersService {
     throw new UnauthorizedException();
   }
 
-  async create(signUpDto: SignUpDto) {
+  async create(signUpDto: SignUpDto): Promise<UserResponseDoc | never> {
     try {
       const role = await this.prisma.role.findFirst({ where: { name: Role.Client } });
       const { firstName, lastName, email, password } = signUpDto;
@@ -84,7 +84,7 @@ export class UsersService {
     }
   }
 
-  async exists(email: string) {
+  async exists(email: string): Promise<UserResponseDoc | never> {
     try {
       return this.prisma.user.findUnique({ where: { email } });
     } catch (error) {
@@ -112,5 +112,30 @@ export class UsersService {
       console.error(error);
       throw new InternalServerErrorException();
     }
+  }
+
+  async findAllCustomers(): Promise<UserResponseDoc[]> {
+    return this.prisma.user.findMany({
+      where: {
+        roles: {
+          some: {
+            role: {
+              name: Role.Client,
+            },
+          },
+        },
+      },
+      select: {
+        uuid: true,
+        profilePicture: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phoneNumber: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 }

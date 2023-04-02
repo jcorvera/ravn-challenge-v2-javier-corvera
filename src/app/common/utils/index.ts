@@ -49,3 +49,39 @@ export const imageMulterOptions = {
   fileFilter: imageFileFilter,
   limits: { fileSize: 1024 * 1024 * 5 }, // 1MB
 };
+
+export const selectColumnsFromArticle = {
+  uuid: true,
+  customerId: true,
+  paymentType: true,
+  total: true,
+  createdAt: true,
+  detail: {
+    select: {
+      id: true,
+      articleName: true,
+      description: true,
+      price: true,
+      quantity: true,
+      total: true,
+      createdAt: true,
+      article: {
+        select: {
+          uuid: true,
+        },
+      },
+    },
+  },
+  customer: {
+    select: {
+      uuid: true,
+      profilePicture: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phoneNumber: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  },
+};

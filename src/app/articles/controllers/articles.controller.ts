@@ -10,6 +10,8 @@ import {
   Get,
   Request,
   Query,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -28,8 +30,11 @@ import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/enums/roles.enum';
 import { ArticlesService, FindArticlesService, LikesArticlesService } from '../services';
 import { CreateArticleDto, QueryArticleDto, UpdateArticleDto } from '../dto';
+import { ArticleResponseDoc } from '../doc/article.response.doc';
+import { ArticlePaginationResponseDoc } from '../doc/article-pagination-response.doc';
 
 @ApiBearerAuth()
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
 @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
 @ApiTags('Articles')
@@ -48,7 +53,7 @@ export class ArticlesController {
   @ApiBadRequestResponse({ description: 'Bad request.' })
   @ApiForbiddenResponse({ description: 'Forbidden.' })
   @ApiBody({ type: CreateArticleDto })
-  create(@Body() createArticleDto: CreateArticleDto) {
+  create(@Body() createArticleDto: CreateArticleDto): Promise<ArticleResponseDoc | never> {
     return this.articlesService.create(createArticleDto);
   }
 
@@ -56,7 +61,7 @@ export class ArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Article found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findOne(@Param('uuid') uuid: string, @Request() req) {
+  findOne(@Param('uuid') uuid: string, @Request() req): Promise<ArticleResponseDoc | never> {
     const { user } = req;
     return this.findArticlesService.findOneArticle(false, uuid, user);
   }
@@ -65,7 +70,7 @@ export class ArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Articles found successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
-  findAll(@Query() queryArticleDto: QueryArticleDto, @Request() req) {
+  findAll(@Query() queryArticleDto: QueryArticleDto, @Request() req): Promise<ArticlePaginationResponseDoc | never> {
     const { user } = req;
     return this.findArticlesService.findAllArticles(false, queryArticleDto, user);
   }
@@ -76,7 +81,7 @@ export class ArticlesController {
   @ApiCreatedResponse({ description: 'Like posted successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
   @ApiForbiddenResponse({ description: 'Forbidden.' })
-  likeArticle(@Param('uuid') id: string, @Request() req) {
+  likeArticle(@Param('uuid') id: string, @Request() req): Promise<{ liked: boolean, articleUuid: string }> {
     return this.likesArticlesService.likeArticle(id, req.user ? +req.user.id : null);
   }
 
@@ -85,7 +90,7 @@ export class ArticlesController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Article updated successfully.' })
   @ApiForbiddenResponse({ description: 'Forbidden.' })
-  update(@Param('uuid') uuid: string, @Body() updateArticleDto: UpdateArticleDto) {
+  update(@Param('uuid') uuid: string, @Body() updateArticleDto: UpdateArticleDto): Promise<ArticleResponseDoc | never> {
     return this.articlesService.update(uuid, updateArticleDto);
   }
 
@@ -95,7 +100,7 @@ export class ArticlesController {
   @ApiNoContentResponse({ description: 'Article deleted successfully.' })
   @ApiNotFoundResponse({ description: 'Resource not found.' })
   @ApiForbiddenResponse({ description: 'Forbidden.' })
-  remove(@Param('uuid') uuid: string) {
+  remove(@Param('uuid') uuid: string): Promise<void | never> {
     return this.articlesService.remove(uuid);
   }
 }

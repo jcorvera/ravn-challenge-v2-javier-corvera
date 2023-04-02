@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 export class S3Service {
   constructor(private readonly configService: ConfigService) {}
 
-  async uploadImage(dataBuffer: Buffer, filename: string, mimetype: string) {
+  async uploadImage(dataBuffer: Buffer, filename: string, mimetype: string): Promise<string | never> {
     const s3 = new S3(s3config);
     const fileExtension = filename.split('.');
     const fileName = `${uuid()}.${fileExtension[fileExtension.length - 1]}`;

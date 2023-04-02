@@ -1,7 +1,17 @@
 import { SignInDto } from '../dto/sign-in.dto';
 import { AuthService } from '../services/auth.service';
 import { Public } from '@common/decorators/public.decorator';
-import { Controller, HttpCode, HttpStatus, Post, Body, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Body,
+  Request,
+  UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -15,8 +25,10 @@ import {
 } from '@nestjs/swagger';
 import { SignUpDto } from '../dto/sign-up.dto';
 import { RefreshTokenGuard } from '../guards';
+import { AuthResponseDoc } from '../doc/auth-response.doc';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -29,7 +41,7 @@ export class AuthController {
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
   @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
   @ApiBody({ type: SignUpDto })
-  signUp(@Body() signUpDto: SignUpDto) {
+  signUp(@Body() signUpDto: SignUpDto): Promise<AuthResponseDoc> {
     return this.authService.signUp(signUpDto);
   }
 
@@ -42,7 +54,7 @@ export class AuthController {
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
   @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
   @ApiBody({ type: SignInDto })
-  signIn(@Body() signInDto: SignInDto) {
+  signIn(@Body() signInDto: SignInDto): Promise<AuthResponseDoc | never> {
     return this.authService.signIn(signInDto);
   }
 
@@ -53,7 +65,7 @@ export class AuthController {
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
   @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
   @ApiBearerAuth()
-  signOut(@Request() req): Promise<void> {
+  signOut(@Request() req): Promise<void | never> {
     return this.authService.signOut(req.user.id);
   }
 
@@ -66,7 +78,7 @@ export class AuthController {
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
   @ApiTooManyRequestsResponse({ description: 'Too Many Requests.' })
   @ApiBearerAuth()
-  refreshToken(@Request() req) {
+  refreshToken(@Request() req): Promise<AuthResponseDoc | never> {
     return this.authService.refreshToken(req.user.email, req.user.refreshToken);
   }
 }

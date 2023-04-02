@@ -1,3 +1,4 @@
+import { formatCurrency } from '@app/common/utils';
 import { faker } from '@faker-js/faker';
 import { hashSync } from 'bcrypt';
 
@@ -53,7 +54,7 @@ export const manager = {
 export const articles = Array.from({ length: 100 }).map(() => ({
   title: faker.commerce.productName(),
   description: faker.commerce.productDescription(),
-  price: faker.commerce.price(),
+  price: 23.45,
   published: faker.datatype.boolean(),
   categoryId: Math.floor(Math.random() * 5 + 1),
   totalLike: Math.floor(Math.random() * 100),

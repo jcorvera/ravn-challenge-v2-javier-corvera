@@ -11,7 +11,7 @@ export class LikesArticlesService {
     private findArticlesService: FindArticlesService,
   ) {}
 
-  async likeArticle(uuid: string, userId: number) {
+  async likeArticle(uuid: string, userId: number): Promise<{ liked: boolean; articleUuid: string }> {
     let count = 0;
     const article = await this.findArticlesService.findByUuid(uuid);
 
@@ -34,6 +34,6 @@ export class LikesArticlesService {
     // Update total like
     await this.articlesService.update(uuid, { totalLike: count });
 
-    return { liked: AlreadyLike.count === 0 };
+    return { liked: AlreadyLike.count === 0, articleUuid: article.uuid };
   }
 }

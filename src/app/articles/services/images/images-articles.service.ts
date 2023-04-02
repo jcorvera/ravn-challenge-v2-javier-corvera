@@ -1,11 +1,9 @@
 import { S3Service } from '@common/s3/services/s3.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { FindArticlesService } from '../articles/find-articles.service';
-
-type Src = {
-  src: string;
-};
+import { ImagesUploadType, Src } from '@common/types/images-upload.type';
+import { ArticleImageResponseDoc } from '@articles/doc/article-image.response.doc';
 
 @Injectable()
 export class ImagesArticlesService {
@@ -15,31 +13,37 @@ export class ImagesArticlesService {
     private findArticlesService: FindArticlesService,
   ) {}
 
-  async saveImages(id: number, images: Src[]) {
+  async saveImages(id: number, images: Src[]): Promise<ArticleImageResponseDoc[]> {
     const saveImages = images.map((image) => {
       return this.prisma.articleImage.create({ data: { src: image.src, articleId: id } });
     });
 
-    await Promise.all(saveImages);
+    return Promise.all(saveImages);
   }
 
-  async uploadImages(uuid: string, images: Express.Multer.File[]) {
+  async uploadImages(uuid: string, images: Express.Multer.File[]): Promise<ImagesUploadType | never> {
     const article = await this.findArticlesService.findByUuid(uuid);
     if (!article) {
       throw new NotFoundException();
     }
 
-    const imageUrls = await Promise.all(
-      images.map(async (file: Express.Multer.File) => {
-        return this.s3Service.uploadImage(file.buffer, file.originalname, file.mimetype);
-      }),
-    );
+    try {
+      const imageUrls = await Promise.all(
+        images.map((file: Express.Multer.File) => {
+          return this.s3Service.uploadImage(file.buffer, file.originalname, file.mimetype);
+        }),
+      );
+      const urls = imageUrls.map((url) => ({ src: url }));
+      const response = await this.saveImages(article.id, urls);
+      const imagesUrls = response.map((image) => ({ src: image.src, id: image.id }));
 
-    const urls = imageUrls.map((url) => ({ src: url }));
-    await this.saveImages(article.id, urls);
-
-    return {
-      images: urls,
-    };
+      return {
+        articleUuid: article.uuid,
+        images: imagesUrls,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 }
