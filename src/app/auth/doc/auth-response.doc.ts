@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RoleEntity } from '@app/users/doc/role.response';
+import { UserRolesResponseDoc } from '@users/doc/user-roles.response.doc';
+import { Exclude, Expose } from 'class-transformer';
 
 export class AuthResponseDoc {
+  @Exclude()
   id?: number;
 
   @ApiProperty({ example: 'd0f0e0c0-0e0d-4e0c-0e0d-0f0e0d0c0b0a' })
@@ -19,9 +21,6 @@ export class AuthResponseDoc {
   @ApiProperty({ example: 'uaer@gmail.com' })
   email?: string;
 
-  @ApiProperty({ example: '' })
-  roles?: RoleEntity[];
-
   @ApiProperty({
     example: [
       {
@@ -32,8 +31,13 @@ export class AuthResponseDoc {
       },
     ],
   })
+  roles?: UserRolesResponseDoc[];
+
+  @Expose()
+  @ApiProperty({ example: 'SDSDSDSD8SDSDSD...' })
   accessToken?: string;
 
+  @Expose()
   @ApiProperty({ example: 'SDSDSDSD8SDSDSD...' })
   refreshToken?: string;
 }

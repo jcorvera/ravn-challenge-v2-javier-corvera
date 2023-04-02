@@ -3,12 +3,14 @@ import { formatCurrency } from '@common/utils';
 import { CreateOrderDto, OrderDetailDto } from '@app/orders/dto/create-order.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Article } from '@prisma/client';
+import { ArticleResponseDoc } from '@articles/doc/article.response.doc';
+import { OrderDetailType, OrderType } from '@orders/types/order-detail.type';
 
 @Injectable()
 export class OrdersValidationService {
   constructor(private findArticlesService: FindArticlesService) {}
 
-  async getArticles(createOrderDto: CreateOrderDto) {
+  async getArticles(createOrderDto: CreateOrderDto): Promise<ArticleResponseDoc[]> {
     const { orderDetail } = createOrderDto;
 
     return (
@@ -20,7 +22,7 @@ export class OrdersValidationService {
     ).filter((article: Article) => article !== null);
   }
 
-  calculateTotalPrice(orderDetail: OrderDetailDto[], articles: Article[]) {
+  calculateTotalPrice(orderDetail: OrderDetailDto[], articles: ArticleResponseDoc[]): number {
     const totalPrice = orderDetail.reduce((total, orderDetail) => {
       const article = articles.find((article) => article.uuid === orderDetail.productUuid);
       return total + Number(article.price) * orderDetail.quantity;
@@ -29,7 +31,7 @@ export class OrdersValidationService {
     return formatCurrency(totalPrice);
   }
 
-  mapOrderDetail(orderDetail: OrderDetailDto[], articles: Article[]) {
+  mapOrderDetail(orderDetail: OrderDetailDto[], articles: ArticleResponseDoc[]): OrderDetailType[] {
     const mapOrderDetail = orderDetail.map((orderDetail) => {
       const findArticle = articles.find((article: Article) => article.uuid === orderDetail.productUuid);
       const total = Number(findArticle.price) * orderDetail.quantity;
@@ -46,7 +48,7 @@ export class OrdersValidationService {
     return mapOrderDetail;
   }
 
-  async validateQuantity(articles: Article[], createOrderDto: CreateOrderDto) {
+  async validateQuantity(articles: ArticleResponseDoc[], createOrderDto: CreateOrderDto): Promise<void | never> {
     const message: string[] = [];
     const { orderDetail } = createOrderDto;
 
@@ -64,7 +66,10 @@ export class OrdersValidationService {
     }
   }
 
-  async validateIfIdsAlreadyExist(articles: Article[], createOrderDto: CreateOrderDto) {
+  async validateIfIdsAlreadyExist(
+    articles: ArticleResponseDoc[],
+    createOrderDto: CreateOrderDto,
+  ): Promise<void | never> {
     const message: string[] = [];
     const { orderDetail } = createOrderDto;
     const articlesIds = articles.map((article) => article.uuid);
@@ -80,10 +85,21 @@ export class OrdersValidationService {
     }
   }
 
-  async validateArticles(createOrderDto: CreateOrderDto) {
+  validateDuplicateIds(createOrderDto: CreateOrderDto): void | never {
+    const { orderDetail } = createOrderDto;
+    const orderDetailIds = orderDetail.map((orderDetail) => orderDetail.productUuid);
+    const orderDetailIdsSet = new Set(orderDetailIds);
+
+    if (orderDetailIds.length !== orderDetailIdsSet.size) {
+      throw new BadRequestException(['The product uuids cannot be repeated']);
+    }
+  }
+
+  async validateArticles(createOrderDto: CreateOrderDto): Promise<OrderType | never> {
     const articles = await this.getArticles(createOrderDto);
     await this.validateIfIdsAlreadyExist(articles, createOrderDto);
     await this.validateQuantity(articles, createOrderDto);
+    this.validateDuplicateIds(createOrderDto);
     const total = this.calculateTotalPrice(createOrderDto.orderDetail, articles);
     const mapOrderDetail = this.mapOrderDetail(createOrderDto.orderDetail, articles);
 
