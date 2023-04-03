@@ -58,7 +58,7 @@ describe('AwsS3Service', () => {
 
     it('Should upload image to S3 and return the url', async () => {
       testS3.upload(params).promise();
-      jest.spyOn(config, 'get').mockReturnValue('https://clothes-store-ravn.s3.us-east-2.amazonaws.com/images/');
+      jest.spyOn(config, 'get').mockReturnValue('https://clothes-store-ravn.s3.us-east-2.amazonaws.com/images');
 
       const response = await service.uploadImage(fakeBuffer, 'image.png', 'image/png');
       expect(response).toEqual(expectedValue);
