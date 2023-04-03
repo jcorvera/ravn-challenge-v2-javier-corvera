@@ -1,4 +1,3 @@
-import { formatCurrency } from '@app/common/utils';
 import { faker } from '@faker-js/faker';
 import { hashSync } from 'bcrypt';
 

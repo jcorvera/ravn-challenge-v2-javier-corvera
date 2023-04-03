@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
-import { CategoriesService } from '../categories/categories.service';
 import { QueryArticleDto } from '../../dto/query-article.dto';
 import { pagination, userIsClient } from '@common/utils/index';
 import { AuthResponseDoc } from '@app/auth/doc/auth-response.doc';
@@ -10,7 +9,7 @@ import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class FindArticlesService {
-  constructor(private prisma: PrismaService, private categories: CategoriesService) {}
+  constructor(private prisma: PrismaService) {}
 
   async count(whereArticles = {}): Promise<number> {
     return this.prisma.article.count({ where: { deleted: false, ...whereArticles } });
