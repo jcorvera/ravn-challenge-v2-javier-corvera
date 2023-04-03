@@ -21,10 +21,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:create": "npm prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
-    "prisma:reset": "npm prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
-    "prisma:format": "npm prisma format --schema=./src/database/schema.prisma",
-    "prisma:migrate": "npm prisma db push --schema=./src/database/schema.prisma"
+    "prisma:create": "yarn prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
+    "prisma:reset": "yarn prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
+    "prisma:format": "yarn prisma format --schema=./src/database/schema.prisma",
+    "prisma:migrate": "yarn prisma db push --schema=./src/database/schema.prisma"
   },
   "dependencies": {
     "@nestjs/cli": "^9.0.0",
