@@ -21,7 +21,7 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-For tests proposues I shared the AWS keys to upload images:
+For test purposes  I share the AWS keys to upload images:
 ```bash
 S3_BUCKET_URL=https://clothes-store-ravn.s3.us-east-2.amazonaws.com/images
 S3_BUCKET_NAME=clothes-store-ravn/images
@@ -30,7 +30,7 @@ S3_BUCKET_ACCESS_KEY_ID=AKIATTAN5N3RK627V6WL
 S3_BUCKET_SECRET_ACCESS_KEY=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
 ```
 
-After that, you can follow link [localhost:3000/api/#](localhost:3000/api/#) to see the documentaion in swagger
+After that, you can follow link [http://localhost:3000/api/#](http://localhost:3000/api/#) to see the documentaion in swagger
 
 
 ## Run Test
