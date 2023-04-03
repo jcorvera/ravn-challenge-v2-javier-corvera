@@ -170,7 +170,7 @@ export const queryOrderFaker = (page: number, pageSize: number, customerUuid?: s
   };
 };
 
-export const authResponseDocFaker = (role: Role): AuthResponseDoc => {
+export const authResponseDocFaker = (role: Role = Role.Client): AuthResponseDoc => {
   return {
     id: faker.datatype.number(),
     uuid: faker.datatype.uuid(),
