@@ -5,8 +5,7 @@ import { AuthResponseDoc } from '@auth/doc/auth-response.doc';
 import { Role } from '../enums/roles.enum';
 import { PaymentType } from '../enums/payment-type.enum';
 import { QueryOrderDto } from '@app/orders/dto/query-order.dto';
-import { CreateOrderDto } from '@app/orders/dto/create-order.dto';
-import { articles } from '../../../database/seeds/data';
+import { SignUpDto } from '@app/auth/dto/sign-up.dto';
 
 // -- Data
 export const imagesFaker = Array.from({ length: 2 }).map(() => ({
@@ -90,6 +89,47 @@ export const ordersFake = Array.from({ length: 5 }).map(() => ({
   createdAt: faker.date.past(),
 }));
 
+export const userRolesFaker = Array.from({ length: 2 }).map(() => ({
+  user: null,
+  userId: faker.datatype.number(),
+  role: {
+    id: faker.datatype.number(),
+    name: faker.name.jobTitle(),
+    createdAt: faker.date.past(),
+    updatedAt: faker.date.recent(),
+    users: [],
+  },
+  roleId: faker.datatype.number(),
+  createdAt: faker.date.past(),
+  updatedAt: faker.date.recent(),
+}));
+
+export const usersFaker = Array.from({ length: 2 }).map(() => ({
+  id: faker.datatype.number(),
+  uuid: faker.datatype.uuid(),
+  profilePicture: faker.image.avatar(),
+  firstName: faker.name.firstName(),
+  lastName: faker.name.lastName(),
+  email: faker.internet.email(),
+  phoneNumber: '08123456789',
+  password: faker.internet.password(),
+  hashRefreshToken: faker.datatype.uuid(),
+  isActive: faker.datatype.boolean(),
+  createdAt: faker.datatype.datetime(),
+  updatedAt: faker.datatype.datetime(),
+  roles: [],
+  address: {
+    id: faker.datatype.number(),
+    city: faker.address.city(),
+    address: faker.address.streetAddress(),
+    postalCode: faker.address.zipCode(),
+    user: null,
+    userId: faker.datatype.number(),
+  },
+  likes: [],
+  orders: [],
+}));
+
 // -- Dtos
 
 export const createArticleFaker = (article: ArticleResponseDoc): CreateArticleDto => {
@@ -148,5 +188,17 @@ export const authResponseDocFaker = (role: Role): AuthResponseDoc => {
         },
       },
     ],
+  };
+};
+
+export const signUpDtoFaker = (): SignUpDto => {
+  return {
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    email: faker.internet.email(),
+    phoneNumber: '08123456789',
+    password: faker.internet.password(),
+    city: faker.address.city(),
+    address: faker.address.streetAddress(),
   };
 };

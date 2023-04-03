@@ -19,6 +19,7 @@ describe('ArticlesService', () => {
   const mockArticle = articlesFaker[0];
 
   beforeEach(async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ArticlesService,
