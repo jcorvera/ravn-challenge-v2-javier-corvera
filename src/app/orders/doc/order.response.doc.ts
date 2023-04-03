@@ -1,4 +1,4 @@
-import { PaymentType } from '@prisma/client';
+import { PaymentType } from '@app/common/types/payment-type.type';
 import { OrderDetailResponseDoc } from './order-detail.response.doc';
 import { UserResponseDoc } from '@users/doc/user.response.doc';
 

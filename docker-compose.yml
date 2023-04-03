@@ -17,7 +17,13 @@ services:
       dockerfile: Dockerfile
       context: .
     env_file: .env
-    command: yarn run start:prod
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run prisma:migrate
+        npx prisma db seed 
+        npm run start:prod
     restart: always
     networks:
       - clothes

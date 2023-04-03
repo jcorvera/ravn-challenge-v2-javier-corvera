@@ -2,7 +2,6 @@ import { FindArticlesService } from '@app/articles/services';
 import { formatCurrency } from '@common/utils';
 import { CreateOrderDto, OrderDetailDto } from '@app/orders/dto/create-order.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Article } from '@prisma/client';
 import { ArticleResponseDoc } from '@articles/doc/article.response.doc';
 import { OrderDetailType, OrderType } from '@orders/types/order-detail.type';
 
@@ -19,7 +18,7 @@ export class OrdersValidationService {
           return this.findArticlesService.findByUuid(orderDetail.productUuid);
         }),
       )
-    ).filter((article: Article) => article !== null);
+    ).filter((article: ArticleResponseDoc) => article !== null);
   }
 
   calculateTotalPrice(orderDetail: OrderDetailDto[], articles: ArticleResponseDoc[]): number {
@@ -33,7 +32,7 @@ export class OrdersValidationService {
 
   mapOrderDetail(orderDetail: OrderDetailDto[], articles: ArticleResponseDoc[]): OrderDetailType[] {
     const mapOrderDetail = orderDetail.map((orderDetail) => {
-      const findArticle = articles.find((article: Article) => article.uuid === orderDetail.productUuid);
+      const findArticle = articles.find((article: ArticleResponseDoc) => article.uuid === orderDetail.productUuid);
       const total = Number(findArticle.price) * orderDetail.quantity;
       return {
         articleName: findArticle.title,
@@ -52,7 +51,7 @@ export class OrdersValidationService {
     const message: string[] = [];
     const { orderDetail } = createOrderDto;
 
-    articles.forEach((article: Article) => {
+    articles.forEach((article: ArticleResponseDoc) => {
       const orderDetailDto = orderDetail.find(
         (orderDetail: OrderDetailDto) => orderDetail.productUuid === article.uuid,
       );

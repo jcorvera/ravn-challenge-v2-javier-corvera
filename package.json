@@ -21,10 +21,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:create": "yarn prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
-    "prisma:reset": "yarn prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
-    "prisma:format": "yarn prisma format --schema=./src/database/schema.prisma",
-    "prisma:migrate": "yarn prisma db push --schema=./src/database/schema.prisma"
+    "prisma:create": "npm prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
+    "prisma:reset": "npm prisma migrate dev --preview-feature --schema=./src/database/schema.prisma",
+    "prisma:format": "npm prisma format --schema=./src/database/schema.prisma",
+    "prisma:migrate": "npm prisma db push --schema=./src/database/schema.prisma"
   },
   "dependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -68,7 +68,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "29.3.1",
-    "jest-mock-extended": "2.0.4",
+    "jest-mock-extended": "^3.0.4",
     "prettier": "^2.3.2",
     "prisma": "^4.12.0",
     "source-map-support": "^0.5.20",
