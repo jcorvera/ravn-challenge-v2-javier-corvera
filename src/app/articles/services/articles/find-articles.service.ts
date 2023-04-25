@@ -9,7 +9,7 @@ import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class FindArticlesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async count(whereArticles = {}): Promise<number> {
     return this.prisma.article.count({ where: { deleted: false, ...whereArticles } });

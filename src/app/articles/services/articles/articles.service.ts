@@ -10,9 +10,9 @@ import { plainToClass } from 'class-transformer';
 @Injectable()
 export class ArticlesService {
   constructor(
-    private prisma: PrismaService,
-    private categories: CategoriesService,
-    private findArticlesService: FindArticlesService,
+    private readonly prisma: PrismaService,
+    private readonly categories: CategoriesService,
+    private readonly findArticlesService: FindArticlesService,
   ) {}
 
   async create(createArticleDto: CreateArticleDto): Promise<ArticleResponseDoc | never> {

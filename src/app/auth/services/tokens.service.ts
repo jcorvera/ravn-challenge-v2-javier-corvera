@@ -5,7 +5,7 @@ import { hash } from 'bcrypt';
 
 @Injectable()
 export class TokensService {
-  constructor(private jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
 
   async hashData(data: string): Promise<string> {
     return hash(data, 10);

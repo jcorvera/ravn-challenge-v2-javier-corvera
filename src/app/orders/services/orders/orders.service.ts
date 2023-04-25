@@ -8,7 +8,10 @@ import { selectColumnsFromArticle } from '@app/common/utils';
 
 @Injectable()
 export class OrdersService {
-  constructor(private ordersValidationService: OrdersValidationService, private prisma: PrismaService) {}
+  constructor(
+    private readonly ordersValidationService: OrdersValidationService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async create(createOrderDto: CreateOrderDto, user: AuthResponseDoc): Promise<OrderResponseDoc | never> {
     const { total, orderDetail } = await this.ordersValidationService.validateArticles(createOrderDto);

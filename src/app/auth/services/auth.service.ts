@@ -10,7 +10,7 @@ import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService, private tokensService: TokensService) {}
+  constructor(private readonly usersService: UsersService, private readonly tokensService: TokensService) {}
 
   parseUserResponse(user: UserResponseDoc): AuthResponseDoc {
     return {

@@ -6,7 +6,7 @@ import { Role } from '@app/common/enums/roles.enum';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findOne(email: string): Promise<UserResponseDoc> {
     return this.prisma.user.findUnique({

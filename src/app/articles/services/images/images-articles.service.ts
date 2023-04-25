@@ -9,8 +9,8 @@ import { ArticleImageResponseDoc } from '@articles/doc/article-image.response.do
 export class ImagesArticlesService {
   constructor(
     private readonly s3Service: S3Service,
-    private prisma: PrismaService,
-    private findArticlesService: FindArticlesService,
+    private readonly prisma: PrismaService,
+    private readonly findArticlesService: FindArticlesService,
   ) {}
 
   async saveImages(id: number, images: Src[]): Promise<ArticleImageResponseDoc[]> {

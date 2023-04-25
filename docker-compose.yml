@@ -22,8 +22,8 @@ services:
       - -c
       - |
         npm run prisma:migrate
-        npx prisma db seed 
         npm run start:prod
+  ## npx prisma db seed 
     restart: always
     networks:
       - clothes

@@ -31,7 +31,7 @@ import { AuthResponseDoc } from '../doc/auth-response.doc';
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('sign-up')

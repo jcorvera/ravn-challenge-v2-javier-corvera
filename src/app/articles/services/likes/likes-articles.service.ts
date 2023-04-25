@@ -6,9 +6,9 @@ import { FindArticlesService } from '../articles/find-articles.service';
 @Injectable()
 export class LikesArticlesService {
   constructor(
-    private prisma: PrismaService,
-    private articlesService: ArticlesService,
-    private findArticlesService: FindArticlesService,
+    private readonly prisma: PrismaService,
+    private readonly articlesService: ArticlesService,
+    private readonly findArticlesService: FindArticlesService,
   ) {}
 
   async likeArticle(uuid: string, userId: number): Promise<{ liked: boolean; articleUuid: string }> {

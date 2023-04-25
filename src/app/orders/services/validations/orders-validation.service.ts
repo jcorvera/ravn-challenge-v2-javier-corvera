@@ -7,7 +7,7 @@ import { OrderDetailType, OrderType } from '@orders/types/order-detail.type';
 
 @Injectable()
 export class OrdersValidationService {
-  constructor(private findArticlesService: FindArticlesService) {}
+  constructor(private readonly findArticlesService: FindArticlesService) {}
 
   async getArticles(createOrderDto: CreateOrderDto): Promise<ArticleResponseDoc[]> {
     const { orderDetail } = createOrderDto;

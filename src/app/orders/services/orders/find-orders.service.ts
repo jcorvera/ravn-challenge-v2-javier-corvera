@@ -9,7 +9,7 @@ import { OrderPaginationResponseDoc } from '@orders/doc/order-pagination.respons
 
 @Injectable()
 export class FindOrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async count(whereArticles = {}): Promise<number> {
     return this.prisma.order.count({ where: { ...whereArticles } });
